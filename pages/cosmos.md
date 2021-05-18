@@ -120,27 +120,85 @@
         - CQL
     - ***Gremlin API*** (graph):
 * ***Indexes***:
-    - The three indexing modes you can use with Azure Cosmos DB are:
-        -   Consistent: The index is updated synchronously every time a new document is written to the collection. New queries on the collection use the updated index right away. Query results are consistent with the updated documents in the collection.
-        - Lazy: The index is updated at a lower priority. The reads and writes from the collection take a higher priority. In lazy mode, writes are cheaper because the index isn't updated immediately. When the index is fully updated depends on the demands on the collection. Query results don't include the updated documents until the index is consistent with the collection.
-        - None: No index is created. Queries are expensive on collections that aren't indexed. If you're using your Azure Cosmos DB collection to read records directly rather than querying the collection, it's possible to avoid the overhead of indexing.
-* There are three conflict resolution modes offered by Azure Cosmos DB.
+    - In Azure Cosmos DB, every container has an indexing policy that dictates how the container's items should be indexed. The default indexing policy for newly created containers indexes every property of every item and enforces range indexes for any string or number. 
 
+    - The three indexing modes you can use with Azure Cosmos DB are:
+        - Consistent: The index is updated synchronously every time a new document is written to the collection. New queries on the collection use the updated index right away. Query results are consistent with the updated documents in the collection.
+        - Lazy: The index is updated at a lower priority. The reads and writes from the collection take a higher priority. In lazy mode, writes are cheaper because the index isn't updated immediately. When the index is fully updated depends on the demands on the collection. Query results don't include the updated documents until the index is consistent with the collection.
+            - New containers cannot select lazy indexing. You can request an exemption by contacting Azure support (except if you are using an Azure Cosmos account in serverless mode which doesn't support lazy indexing).
+        - None: No index is created. Queries are expensive on collections that aren't indexed. If you're using your Azure Cosmos DB collection to read records directly rather than querying the collection, it's possible to avoid the overhead of indexing.It can also be used to improve the performance of bulk operations. After the bulk operations are complete, the index mode can be set to Consistent and then monitored using the IndexTransformationProgress until complete.
+    - Spatial indexes
+        - Spatial indices enable efficient queries on geospatial objects such as - points, lines, polygons, and multipolygon. These queries use ST_DISTANCE, ST_WITHIN, ST_INTERSECTS keywords. The following are some examples that use spatial index typr
+    - Composite indexes
+        - Queries that have an ORDER BY clause with two or more properties require a composite index. You can also define a composite index to improve the performance of many equality and range queries. By default, no composite indexes are defined so you should add composite indexes as needed.
+    - Range Indexes
+        - Range index is based on an ordered tree-like structure. The range index type is used for:
+            - Equality queries
+            - Equality match on an array element
+            - Range queries
+            - Checking for the presence of a property
+            - String system functions
+            - ORDER BY queries
+            - JOIN queries
+        - Range indexes can be used on scalar values (string or number). The default indexing policy for newly created containers enforces range indexes for any string or number.
+    - it is not possible to activate TTL on a container where the indexing mode is set to none,
+    - it is not possible to set the indexing mode to None on a container where TTL is activated.
+
+* There are three conflict resolution modes offered by Azure Cosmos DB.
     - Last-Writer-Wins (LWW), in which conflicts are resolved based on the value of a user-defined integer property in the document. By default _ts is used to determine the last written document. Last-Writer-Wins is the default conflict handling mechanism.
     - Custom - User-defined function, in which you can fully control conflict resolution by registering a User-defined function to the collection. A User-defined function is a special type of stored procedure with a specific signature. If the User-defined function fails or does not exist, Azure Cosmos DB will add all conflicts into the read-only conflicts feed they can be processed asynchronously.
     - dCustom - Async, in which Azure Cosmos DB excludes all conflicts from being committed and registers them in the read-only conflicts feed for deferred resolution by the user’s application. The application can perform conflict resolution asynchronously and use any logic or refer to any external source, application, or service to resolve the conflict.
 * ***Backup***:
     - Completely automated
     - Backups takem every 4 hours
-    - Two backups are stored
+    - 2 backups are stored
     - No configuration possible
     - Backups replicated to paired region
     - A ticket is raised to restore data
     - Custom data backups solutions can be implemented via ADF or via the Cosmos DB change feed
+    - When an account is deleted a backup is taken and stored for up to 90 days
+    - ![alt](../img/cosmos_backups.png)
 * ***Geo-Replication***:
     - Within a region the data within a container is durably committed by a majority of replica members within the replica set
     - Additional regions can be added as read or read-write depending on the account configuration
     - For single-write account automatic failover can be configured
     - Apps use a ConnectionPolicy to direct preferred write location for multi-write accounts
+
+* ***Server-Side programming***
+    - Stored Procedures
+        - JavaScript
+        - Atomic Transactions
+        - Much like with traditional JavaScript applications, you can use console.log() to capture various telemetry and data points for your running code.
+    - User-Defined Functions
+        - User-defined functions (UDFs) are used to extend the Azure Cosmos DB SQL API’s query language grammar and implement custom business logic. UDFs can only be called from inside queries
+        - They do not have access to the context object and are meant to be used as compute-only code
+
+* ***Network Security***:
+    - HTTPS/SSL/TLS 1.2 
+    - Firewall
+    - Private Link
+
+* ***Authorization***:
+    - AAD identity 
+        - Roles:
+            - Azure Owner – All Access
+            - Azure Contributor – All Access but no permission to add/remove other AAD principals.
+            - Azure Reader – Access to account information.  No data access.
+            - Azure Cosmos DB Account Reader – Read access to all account information and read access to data.
+    - Master Key
+        - Master key - a security token to access all resources for an account. Individuals with the key have full access including read and write access to the all resources in the database account. 
+        - Each account consists of 2 Master keys: Primary key and Secondary key
+    - Read-only key
+        - Each account consists of 2 Read-only keys:
+    - Resource token
+        - TODO
+    - RBAC for data layer in preview
+    - ![alt](../img/cosmos_access.png) 
+
+
+* ***Synapce Link (Analytical Store)***:
+    - ![alt](../img/cosmos_synapcelink.png)
+
 * ***Some links***:
     - https://docs.microsoft.com/en-us/azure/cosmos-db/global-dist-under-the-hood
+
