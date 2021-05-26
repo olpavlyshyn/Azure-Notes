@@ -81,7 +81,19 @@
             - Sets query timeout value. Gets DBAs out of the business of terminating runaway queries.
     - ***Workload classification***:
         - Using T-SQL, you can create a workload classifier to map queries to a specific classifier. A classifier can define the level of importance of the request, so that it can be mapped to a specific workload group that has an allocation of specific resources during the execution of the query.
-        - CREATE WORKLOAD CLASSIFIER <name> WITH
+```sql 
+CREATE WORKLOAD CLASSIFIER classifier_name  
+    WITH  
+        (   WORKLOAD_GROUP = 'name'  
+        ,   MEMBERNAME = 'security_account' 
+    [ [ , ] WLM_LABEL = 'label' ]  
+    [ [ , ] WLM_CONTEXT = 'context' ]  
+    [ [ , ] START_TIME = 'HH:MM' ]  
+    [ [ , ] END_TIME = 'HH:MM' ]  
+    
+    [ [ , ] IMPORTANCE = { LOW | BELOW_NORMAL | NORMAL | ABOVE_NORMAL | HIGH }]) 
+[;]
+```
     - ***Result-set cache***:
         - When result-set caching is enabled, the results of the query are cached in the SQL pool storage.
         - Result-set cache enables interactive response times for repetitive queries against tables with infrequent data changes. The result-set cache persists even if SQL pool is paused and resumed later, although the query cache is invalidated and refreshed when the underlying table data or query code changes.

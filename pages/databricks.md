@@ -71,5 +71,24 @@
 
 ![alt](../img/databricks.png)
 
+* ***Secret scopes***:
+    -  A secret scope is collection of secrets identified by a name. A workspace is limited to a maximum of 100 secret scopes.
+    - Azure Key Vault-backed scopes
+        - To reference secrets stored in an Azure Key Vault, you can create a secret scope backed by Azure Key Vault. You can then leverage all of the secrets in the corresponding Key Vault instance from that secret scope. Because the Azure Key Vault-backed secret scope is a read-only interface to the Key Vault, the PutSecret and DeleteSecret Secrets API operations are not allowed. 
+    - Databricks-backed scopes
+        -  Databricks-backed secret scope is stored in (backed by) an encrypted database owned and managed by Azure Databricks. The secret scope name:
+            - Must be unique within a workspace.
+            - Must consist of alphanumeric characters, dashes, underscores, and periods, and may not exceed 128 characters.
+
+* ***Delta Lake***:
+    - Delta Lake is an open source project that enables building a Lakehouse architecture on top of data lakes. Delta Lake provides ACID transactions, scalable metadata handling, and unifies streaming and batch data processing on top of existing data lakes.
+    - Delta Lake offers:
+        - ACID transactions on Spark: Serializable isolation levels ensure that readers never see inconsistent data.
+        - Scalable metadata handling: Leverages Spark distributed processing power to handle all the metadata for petabyte-scale tables with billions of files at ease.
+        - Streaming and batch unification: A table in Delta Lake is a batch table as well as a streaming source and sink. Streaming data ingest, batch historic backfill, interactive queries all just work out of the box.
+        - Schema enforcement: Automatically handles schema variations to prevent insertion of bad records during ingestion.
+        - Time travel: Data versioning enables rollbacks, full historical audit trails, and reproducible machine learning experiments.
+        - Upserts and deletes: Supports merge, update and delete operations to enable complex use cases like change-data-capture, slowly-changing-dimension (SCD) operations, streaming upserts, and so on.
+
 * ***Some links***:
     - https://github.com/Azure/AzureDatabricksBestPractices/blob/master/toc.md#Deploying-Applications-on-ADB-Guidelines-for-Selecting-Sizing-and-Optimizing-Clusters-Performance
