@@ -96,6 +96,7 @@
     - The cost to do a point read (i.e. fetching a single item by its ID and partition key value) for a 1 KB item is 1 RU.
     - There are 3 modes in which you can create an account:
         - ***Provisioned throughput mode***: In this mode, you provision the number of RUs for your application on a per-second basis in increments of 100 RUs per second. You can provision throughput at two distinct granularities: containers, databases
+            - You can optionally provision dedicated throughput for a container within a database that has throughput provisioned. This dedicated throughput amount will not be shared with other containers in the database and does not count towards the throughput you provisioned for the database. This throughput amount will be billed in addition to the throughput amount you provisioned at the database level.
         - ***Serverless mode***: In this mode, you don't have to provision any throughput when creating resources in your Azure Cosmos account. At the end of your billing period, you get billed for the amount of Request Units that has been consumed by your database operations.
         - ***Autoscale mode***: In this mode, you can automatically and instantly scale the throughput (RU/s) of your database or container based on it's usage
     - Assuming that a Cosmos container is configured with 'R' RUs and there are 'N' regions associated with the Cosmos account, the total RUs available globally on the container = R x N. You can't selectively assign RUs to a specific region.
